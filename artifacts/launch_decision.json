@@ -1,0 +1,49 @@
+{
+  "decision": "Pause",
+  "rationale": "Decision Pause driven by tool outputs: error_rate latest=0.022 vs first_half_mean=0.007; last_3d_mean=0.017. p95 latency trend up (4.71% vs early/late thirds). Feedback sentiment: 5 positive / 6 negative / 20 neutral with themes ['stability', 'payment_checkout', 'activation', 'performance']. Anomalies in error_rate series: 1 day(s) flagged.",
+  "risk_register": [
+    {
+      "risk": "Payment/checkout instability may erode trust and increase refunds.",
+      "mitigation": "Enable feature flag rollback; hotfix duplicate webhook handling; add canary on payment path.",
+      "severity": "high"
+    },
+    {
+      "risk": "Latency regression under peak load if regional caches are cold.",
+      "mitigation": "Pre-warm caches; scale checkout workers; temporarily cap rollout percentage.",
+      "severity": "medium"
+    },
+    {
+      "risk": "Mixed customer perception could amplify social complaints if external comms lag reality.",
+      "mitigation": "Publish known-issues page; proactive status updates; align support macros.",
+      "severity": "medium"
+    }
+  ],
+  "action_plan": [
+    {
+      "action": "Triage payment errors with provider logs; confirm duplicate webhook hypothesis.",
+      "owner": "Engineering",
+      "window_hours": 24
+    },
+    {
+      "action": "Run anomaly dashboard review for error_rate, p95, support tickets; set alert thresholds.",
+      "owner": "Data",
+      "window_hours": 24
+    },
+    {
+      "action": "Draft internal summary + external status comms acknowledging elevated errors.",
+      "owner": "Marketing",
+      "window_hours": 36
+    },
+    {
+      "action": "Prepare staged rollback playbook and verify feature flag ownership.",
+      "owner": "PM",
+      "window_hours": 48
+    }
+  ],
+  "communication_plan": {
+    "internal": "Share tool-derived summary: error_rate spike, latency trend, ticket volume vs baseline; explicit go/pause/rollback trigger table.",
+    "external": "Transparent messaging: we are investigating elevated payment errors; workaround steps; ETA for update."
+  },
+  "confidence": 0.65,
+  "what_would_increase_confidence": "More confidence with longer post-fix bake time, provider-side confirmation of webhook behavior, and segmented error attribution (client vs server vs third-party)."
+}

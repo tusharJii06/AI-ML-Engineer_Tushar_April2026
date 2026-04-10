@@ -1,0 +1,31 @@
+Loving the new onboarding — super clear.
+Checkout felt slower than usual today.
+Seeing random errors after the update on payment screen.
+Great feature, finally can do X in one click.
+App crashed twice when I opened settings.
+Latency on dashboard is rough during peak hours.
+Smooth rollout from my side, no issues.
+Support never answered about the refund flow bug.
+Neutral — looks the same to me.
+Error banner keeps popping up but then it works?
+Signup conversion seems easier; nice job.
+Payment failed once then succeeded — confusing.
+Terrible experience, stuck on loading spinner.
+Fast and stable on Wi‑Fi, flaky on mobile data.
+Repeated crashes when switching accounts — please fix.
+User feedback: love the design, hate the bugs.
+Marketing email said instant activation; mine took 10 minutes.
+p95 feels worse than last week subjectively.
+Churned because checkout broke twice.
+Neutral feedback — documentation could be clearer.
+Positive: analytics load faster now.
+Negative: still seeing timeout on API calls occasionally.
+Outlier: I think the moon phase affects my signup (joke) but UI is fine.
+Many users in our org report intermittent 500s.
+Refund flow error is blocking our finance team.
+Feature adoption in our team is high despite minor glitches.
+Crash rate seems higher on Android per our beta group.
+Good direction, but error rate spike worries me.
+Customer perception is mixed — power users happy, casual users confused.
+Comms need to acknowledge known payment issues publicly.
+Internally we need clearer rollback criteria before full launch.

@@ -1,0 +1,56 @@
+bug_summary:
+  symptoms: 'Customers report paying **$80** for the same scenario (discount looks
+    doubled).
+
+    Expected: When applying a 10% promotion to a $100 subtotal, the customer should
+    pay **$90**.'
+  scope: checkout pricing (`apply_promo`)
+  severity: high
+evidence:
+- kind: stack_trace
+  content: "Traceback (most recent call last):\n  File \"/app/tests/test_pricing.py\"\
+    , line 9, in test_apply_promo_single_application\n    assert apply_promo(100.0,\
+    \ 10.0) == 90.0\n  File \"/app/checkoutcalc/__init__.py\", line 14, in apply_promo\n\
+    \    return subtotal - discount * 2\nAssertionError: assert 80.0 == 90.0"
+- kind: stack_trace
+  content: "Traceback (most recent call last):\n  File \"/app/tests/test_pricing.py\"\
+    , line 9, in test_apply_promo_single_application\n    assert apply_promo(100.0,\
+    \ 10.0) == 90.0\n  File \"/app/checkoutcalc/__init__.py\", line 14, in apply_promo\n\
+    \    return subtotal - discount * 2\nAssertionError: assert 80.0 == 90.0"
+- kind: log_line
+  content: '2026-04-05T10:06:18Z ERROR request_id=ff6 AssertionError: assert 80.0
+    == 90.0'
+- kind: log_line
+  content: 'Traceback (most recent call last):'
+- kind: log_line
+  content: '  File "/app/tests/test_pricing.py", line 9, in test_apply_promo_single_application'
+repro_steps:
+- 'Install deps: `pip install -r requirements.txt`'
+- Run `python -m pytest D:/Offcampus/purple/assessment2_bug_triage/artifacts/repro/test_repro_checkout.py
+  -q` from repo root (expect failure).
+- Alternatively run `python -m pytest D:/Offcampus/purple/assessment2_bug_triage/mini_repo/tests
+  -q` (suite shows same assertion).
+repro_artifact_path: D:/Offcampus/purple/assessment2_bug_triage/artifacts/repro/test_repro_checkout.py
+root_cause_hypothesis: '`apply_promo` computes `discount = subtotal * promo_pct/100`
+  but returns `subtotal - discount * 2`, applying the discount twice (observed 80.0
+  vs expected 90.0 for 10% off $100).'
+root_cause_confidence: 0.86
+patch_plan:
+  files_modules:
+  - assessment2_bug_triage/mini_repo/checkoutcalc/__init__.py
+  approach: Change return to `subtotal - discount` (single application). Add regression
+    tests for 0%, 10%, 100% edge cases.
+  risks: 'Promo stacking rules: confirm business logic does not intentionally double-apply
+    in another layer.'
+validation_plan:
+  tests_to_add:
+  - parametrized tests for apply_promo boundaries
+  - integration test for checkout total if applicable
+  regression_checks:
+  - Run full mini_repo pytest suite
+  - Verify no consumers relied on doubled-discount behavior
+open_questions:
+- Confirm intended behavior when promo_pct > 100 or negative values.
+- Verify no duplicate application in API layer wrapping `apply_promo`.
+- "Unrelated log noise mentions duplicate webhooks \u2014 confirm not conflated with\
+  \ pricing bug."

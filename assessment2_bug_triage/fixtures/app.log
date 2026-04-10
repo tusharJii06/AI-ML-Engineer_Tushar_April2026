@@ -1,0 +1,22 @@
+2026-04-05T10:01:12Z INFO request_id=aa1 healthcheck ok
+2026-04-05T10:02:03Z WARN request_id=bb2 cache miss for static asset /favicon.ico
+2026-04-05T10:03:44Z INFO request_id=cc3 user=anonymous session=start
+2026-04-05T10:04:01Z ERROR request_id=dd4 checkout failed validation: missing shipping (unrelated)
+2026-04-05T10:05:22Z INFO request_id=ee5 deploy_version=2026.04.05-14 rollout=25%
+2026-04-05T10:06:18Z ERROR request_id=ff6 AssertionError: assert 80.0 == 90.0
+Traceback (most recent call last):
+  File "/app/tests/test_pricing.py", line 9, in test_apply_promo_single_application
+    assert apply_promo(100.0, 10.0) == 90.0
+  File "/app/checkoutcalc/__init__.py", line 14, in apply_promo
+    return subtotal - discount * 2
+AssertionError: assert 80.0 == 90.0
+2026-04-05T10:06:19Z INFO request_id=gg7 noise: retried provider timeout (benign)
+2026-04-05T10:07:01Z ERROR request_id=hh8 Database pool warming slow on shard 3 (red herring)
+2026-04-05T10:08:33Z INFO request_id=ii9 duplicate webhook received id=12345 (possible separate issue)
+2026-04-05T10:09:10Z ERROR request_id=jj0 AssertionError: assert 80.0 == 90.0
+Traceback (most recent call last):
+  File "/app/tests/test_pricing.py", line 9, in test_apply_promo_single_application
+    assert apply_promo(100.0, 10.0) == 90.0
+  File "/app/checkoutcalc/__init__.py", line 14, in apply_promo
+    return subtotal - discount * 2
+AssertionError: assert 80.0 == 90.0
