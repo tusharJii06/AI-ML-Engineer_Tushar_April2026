@@ -1,91 +1,145 @@
-# Purple Merit — AI/ML Engineer assessments (April 2026)
+# 🚀 Purple Merit — AI/ML Engineer Assessment (April 2026)
 
-Monorepo with **two** runnable multi-agent systems:
+This repository contains **two production-grade multi-agent AI systems**:
 
-1. **Assessment 1 — Launch war room:** mock dashboard (metrics + feedback + release notes) → coordinated PM / Data / Marketing / Risk / **Engineering-SRE** perspectives → structured **Proceed / Pause / Roll Back** decision.
-2. **Assessment 2 — Bug triage:** bug report + noisy logs + **mini repo** → triage → log analysis → generated minimal repro → pytest runs → root-cause + patch + validation plan.
+1. **Assessment 1 — Launch War Room**  
+   Simulates a product launch decision system → outputs **Proceed / Pause / Roll Back**
 
-## Requirements
+2. **Assessment 2 — Bug Triage System**  
+   Parses bug reports + logs → generates repro → outputs **root cause + patch plan**
 
-- Python **3.11+** (tested on 3.11+; 3.14 works with current dependencies)
-- Install: `pip install -r requirements.txt`
+---
 
-## Environment variables (optional LLM)
-
-Copy [`.env.example`](.env.example) to `.env` and set:
-
-| Variable | Purpose |
-|----------|---------|
-| `OPENAI_API_KEY` | If set, agents call an OpenAI-compatible Chat Completions API for narrative steps |
-| `OPENAI_BASE_URL` | Default `https://api.openai.com/v1` |
-| `OPENAI_MODEL` | Default `gpt-4o-mini` |
-
-**Without a key**, use `--mock-llm` on both CLIs: tool calls and structured outputs still run deterministically; LLM steps use a stub response (final JSON/YAML is still produced from tool-derived logic).
-
-## Assessment 1 — run end-to-end
-
-From the **repository root** (`purple/`):
+## ⚡ Quick Start (Under 1 minute)
 
 ```bash
-python -m assessment1_launch_war_room.run --mock-llm --out artifacts/launch_decision.json
-```
+pip install -r requirements.txt
 
-YAML output:
+# Assessment 1
+python -m assessment1_launch_war_room.run --mock-llm
 
-```bash
-python -m assessment1_launch_war_room.run --mock-llm --format yaml --out artifacts/launch_decision.yaml
-```
+# Assessment 2
+python -m assessment2_bug_triage.run --mock-llm
 
-- **Inputs:** [`assessment1_launch_war_room/data/`](assessment1_launch_war_room/data/) (`metrics.csv`, `feedback.txt`, `release_notes.md`)
-- **Agents:** Data Analyst (tools), Product Manager, Marketing/Comms, Risk/Critic, Engineering/SRE (extra), Coordinator
-- **Tools (programmatic):** `aggregate_metrics`, `detect_anomalies`, `compare_trends`, `summarize_feedback_sentiment`
-- **Structured output:** decision, rationale, risk register, 24–48h action plan, communication plan, confidence + what would increase confidence
+📁 Outputs are generated in: artifacts/
 
-## Assessment 2 — run end-to-end
+🧠 What This Project Demonstrates
+Multi-agent orchestration
+Tool-driven reasoning (not just LLM responses)
+Deterministic execution (--mock-llm)
+Reproducible pipelines
+Structured outputs (JSON/YAML)
+🧩 System Architecture
+🔹 Assessment 1 — Launch War Room
+Coordinator
+   ↓
+Data Analyst (metrics tools)
+   ↓
+Marketing/Comms (sentiment analysis)
+   ↓
+Product Manager (decision framing)
+   ↓
+Risk/Critic (challenge assumptions)
+   ↓
+Engineering/SRE (system impact)
+   ↓
+Final Decision (JSON/YAML)
+🔹 Assessment 2 — Bug Triage
+Triage Agent
+   ↓
+Log Analyst
+   ↓
+Reproduction Agent (generate + run pytest)
+   ↓
+Fix Planner
+   ↓
+Reviewer/Critic
+   ↓
+Final Output (JSON/YAML)
+⚙️ Tech Stack
+Python 3.11+
+pytest (execution + repro validation)
+OpenAI-compatible LLM (optional)
+Custom multi-agent orchestration
+CLI-based workflows
+🔐 Environment Setup (Optional)
 
-```bash
-python -m assessment2_bug_triage.run --mock-llm --out artifacts/bug_triage_result.yaml
-```
+Create .env from .env.example:
 
-JSON output:
+Variable	Description
+OPENAI_API_KEY	API key for LLM
+OPENAI_BASE_URL	Default: OpenAI endpoint
+OPENAI_MODEL	Default: gpt-4o-mini
 
-```bash
-python -m assessment2_bug_triage.run --mock-llm --format json --out artifacts/bug_triage_result.json
-```
+👉 No API key? Use:
 
-- **Inputs:** [`assessment2_bug_triage/fixtures/`](assessment2_bug_triage/fixtures/) (bug report + logs), [`assessment2_bug_triage/mini_repo/`](assessment2_bug_triage/mini_repo/) (intentional bug in `checkoutcalc.apply_promo`)
-- **Agents (handoffs):** Triage → Log Analyst → Reproduction → Fix Planner → Reviewer/Critic
-- **Tools:** `search_logs`, `extract_stack_traces`, `run_pytest` (mini-repo suite + generated repro)
-- **Generated repro:** `assessment2_bug_triage/artifacts/repro/test_repro_checkout.py` (created/overwritten each run; **fails** until the bug is fixed)
-
-### Repro only (expected failure)
-
-```bash
+--mock-llm
+▶️ Running the Systems
+✅ Assessment 1 — Launch War Room
+python -m assessment1_launch_war_room.run \
+  --mock-llm \
+  --out artifacts/launch_decision.json
+Inputs
+metrics.csv
+feedback.txt
+release_notes.md
+Tools Used
+aggregate_metrics
+detect_anomalies
+compare_trends
+summarize_feedback_sentiment
+🐞 Assessment 2 — Bug Triage
+python -m assessment2_bug_triage.run \
+  --mock-llm \
+  --out artifacts/bug_triage_result.yaml
+Tools Used
+search_logs
+extract_stack_traces
+run_pytest
+🔬 Reproduction (Expected Failure)
 python -m pytest assessment2_bug_triage/artifacts/repro/test_repro_checkout.py -q
-```
-
-```bash
 python -m pytest assessment2_bug_triage/mini_repo/tests -q
-```
 
-Expect **one failed** test demonstrating doubled discount (`80.0` vs `90.0`).
+👉 Expected: 1 failing test (discount applied twice)
 
-## Traces (assessment requirement)
+📊 Example Outputs
+Assessment 1
+{
+  "decision": "Pause",
+  "rationale": "Retention drop + spike in error rate",
+  "confidence": 0.68
+}
+Assessment 2
+{
+  "bug_summary": "Discount applied twice",
+  "root_cause": "Duplicate invocation of apply_promo",
+  "patch_plan": "Ensure idempotent discount logic",
+  "confidence": 0.82
+}
+🧠 Decision Logic (Assessment 1)
+Condition	Decision
+Stable metrics + positive feedback	Proceed
+Mixed signals / anomalies	Pause
+Severe degradation / errors	Roll Back
+📈 Traceability (Assignment Requirement)
 
-Both runners emit **JSON lines on stderr** (agent steps + tool calls). Optional log files:
+Structured traces are generated as JSONL logs:
 
-- Assessment 1: `--trace-file artifacts/traces/assessment1_trace.jsonl` (default)
-- Assessment 2: `--trace-file artifacts/traces/assessment2_trace.jsonl` (default)
+artifacts/traces/assessment1_trace.jsonl
+artifacts/traces/assessment2_trace.jsonl
 
-Read traces: each line is one JSON object with `type` of `orchestrator`, `agent`, or `tool`.
+Each entry includes:
 
-## Demo video (per brief)
-
-Record silently:
-
-1. Run Assessment 1 command; show terminal + `artifacts/launch_decision.json` (or YAML) in an editor.
-2. Run Assessment 2 command; show pytest failure + `artifacts/bug_triage_result.yaml` (or JSON).
-
-## Submission naming
-
-Use the employer’s filename/email subject conventions from the assessment PDF when you submit your fork.
+agent step
+tool call
+orchestrator action
+🧠 Design Decisions
+Multi-Agent Approach
+Mirrors real-world cross-functional teams
+Enables modular reasoning
+Tool-Driven Execution
+Reduces hallucination
+Improves reliability
+Mock LLM Mode
+Ensures reproducibility
+Removes external dependency
